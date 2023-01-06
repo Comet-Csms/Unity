@@ -1,0 +1,95 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// 1. 위치벡터
+// 2. 거리벡터
+// 3. 단위벡터
+struct MyVector
+{
+    public float x;
+    public float y;
+    public float z;
+
+    public MyVector(float x, float y, float z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public static MyVector operator +(MyVector a, MyVector b)
+    {
+        return new MyVector(a.x + b.x, a.y + b.y, a.z + b.z);
+    }
+
+    public static MyVector operator -(MyVector a, MyVector b)
+    {
+        return new MyVector(a.x - b.x, a.y - b.y, a.z - b.z);
+    }
+
+    public static MyVector operator *(MyVector a, float f)
+    {
+        return new MyVector(a.x * f, a.y * f, a.z * f);
+    }
+
+    public float magnitude
+    {
+        get
+        {
+            return Mathf.Sqrt(x * x + y * y + z * z);
+        }
+    }
+    public MyVector normalized
+    {
+        get
+        {
+            return new MyVector(x / magnitude, y / magnitude, z / magnitude);
+        }
+    }
+}
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] // public을 붙여준 것과 같은 효과
+    public float _speed = 10.0f; // Unity상에서 조절이 가능해짐
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        MyVector to = new MyVector(10.0f, 0.0f, 0.0f); // 목적지 // 위치벡터
+        MyVector from = new MyVector(5.0f, 0.0f, 0.0f); // 출발지 // 위치벡터
+        MyVector dir = to - from; // (5.0f, 0.0f, 0.0f) // 목적지 - 출발지 // 거리벡터
+        dir = dir.normalized; // (1.0f, 0.0f, 0.0f) // 단위벡터 // 방향만 남음(크기 1)
+
+        MyVector newPos = from + dir * _speed;
+
+        // 거리벡터
+            // 1. 크기 : 5, magnitude
+            // 2. 방향 : 오른쪽, normalized
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Translate
+        // Local 좌표계로 연산
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * _speed);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.Translate(Vector3.back * Time.deltaTime * _speed);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Translate(Vector3.right * Time.deltaTime * _speed);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Translate(Vector3.left * Time.deltaTime * _speed);
+        }
+    }
+}

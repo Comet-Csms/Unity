@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField]
+    public float _speed = 10.0f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Managers.Input.KeyAction -= OnKeyboard; // 이전에 다른 곳에서 구독했다면 그 구독을 삭제 해주기 위한 코드
+        Managers.Input.KeyAction += OnKeyboard; // 구독하기
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    void OnKeyboard()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.2f); // (처음보는 위치, 최종보는 위치, 0~1) // World 좌표계로 작동
+            transform.position += Vector3.forward * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.2f); // (처음보는 위치, 최종보는 위치, 0~1) // World 좌표계로 작동
+            transform.position += Vector3.back * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.2f); // (처음보는 위치, 최종보는 위치, 0~1) // World 좌표계로 작동
+            transform.position += Vector3.right * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.2f); // (처음보는 위치, 최종보는 위치, 0~1) // World 좌표계로 작동
+            transform.position += Vector3.left * Time.deltaTime * _speed;
+        }
+    }
+}
