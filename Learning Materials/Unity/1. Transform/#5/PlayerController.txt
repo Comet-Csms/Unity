@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] // 변수를 public으로 선언하지 않으면서 Inspector에서 조절이 가능해짐
+    public float _speed = 10.0f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    //float _yAngle = 0.0f;
+    // Update is called once per frame
+    void Update()
+    {
+        //_yAngle += Time.deltaTime * 100.0f;
+
+        // 방법 1.
+        // 절대 회전값 // _yAngle의 값으로 회전
+        //transform.eulerAngles = new Vector3(0.0f, _yAngle, 0.0f);
+        //transform.eulerAngles += new Vector3(0.0f, Time.deltaTime * 100.0f, 0.0f); // 바로 위 코드랑 완전히 동일하게 작동함
+        //transform.eulerAngles = new Vector3(0.0f, 10.0f, 0.0f); // 단순히 절대각도 10도에 위치함
+
+        // 방법 2.
+        // +- delta, 특정 축을 기준으로 얼마만큼 회전하고 싶을 때
+        //transform.Rotate(new Vector3(0.0f, Time.deltaTime * 100.0f, 0.0f));
+        //transform.Rotate(new Vector3(0.0f, 10.0f, 0.0f)); // 매 프레임 마다 현재 위치에서 10도씩 회전
+
+        // 방법 3. (== 방법 1.)
+        //transform.rotation = Quaternion.Euler(new Vector3(0.0f, _yAngle, 0.0f));
+        //transform.rotation = Quaternion.Euler(new Vector3(0.0f, 10.0f, 0.0f)); // 단순히 절대각도 10도에 위치함
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.forward); // 앞쪽을 바라보게 만듦 // World 좌표계로 작동
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.2f); // (기존 바라보는 위치, 최종 바라보는 위치, 0~1) // 0 : 기존 바라보는 위치, 1 : 최종 바라보는 위치 // World 좌표계로 작동
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed); // 플레이어가 고개를 돌림, 플레이어가 보는 앞방향으로 가기 위해 forward로 수정 // 바로 위코드 - 회전하는 도중에는 캐릭터의 앞방향이 최종 바라보는 위치가 아니기 때문에 움직일 때 튀는 현상 발생
+            transform.position += Vector3.forward * Time.deltaTime * _speed; // 다시 예제 #2에서 했던 World 좌표계로 이동하는 방법을 이용하면 튀는 현상 없음
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.back); // 뒤쪽을 바라보게 만듦 // World 좌표계로 작동
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.2f); // (기존 바라보는 위치, 최종 바라보는 위치, 0~1) // 0 : 기존 바라보는 위치, 1 : 최종 바라보는 위치 // World 좌표계로 작동
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed); // 플레이어가 고개를 돌림, 플레이어가 보는 앞방향으로 가기 위해 forward로 수정 // 바로 위코드 - 회전하는 도중에는 캐릭터의 앞방향이 최종 바라보는 위치가 아니기 때문에 움직일 때 튀는 현상 발생
+            transform.position += Vector3.back * Time.deltaTime * _speed; // 다시 예제 #2에서 했던 World 좌표계로 이동하는 방법을 이용하면 튀는 현상 없음
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.right); // 오른쪽을 바라보게 만듦 // World 좌표계로 작동
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.2f); // (기존 바라보는 위치, 최종 바라보는 위치, 0~1) // 0 : 기존 바라보는 위치, 1 : 최종 바라보는 위치 // World 좌표계로 작동
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed); // 플레이어가 고개를 돌림, 플레이어가 보는 앞방향으로 가기 위해 forward로 수정 // 바로 위코드 - 회전하는 도중에는 캐릭터의 앞방향이 최종 바라보는 위치가 아니기 때문에 움직일 때 튀는 현상 발생
+            transform.position += Vector3.right * Time.deltaTime * _speed; // 다시 예제 #2에서 했던 World 좌표계로 이동하는 방법을 이용하면 튀는 현상 없음
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.left); // 왼쪽을 바라보게 만듦 // World 좌표계로 작동
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.2f); // (기존 바라보는 위치, 최종 바라보는 위치, 0~1) // 0 : 기존 바라보는 위치, 1 : 최종 바라보는 위치 // World 좌표계로 작동
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed); // 플레이어가 고개를 돌림, 플레이어가 보는 앞방향으로 가기 위해 forward로 수정 // 바로 위코드 - 회전하는 도중에는 캐릭터의 앞방향이 최종 바라보는 위치가 아니기 때문에 움직일 때 튀는 현상 발생
+            transform.position += Vector3.left * Time.deltaTime * _speed; // 다시 예제 #2에서 했던 World 좌표계로 이동하는 방법을 이용하면 튀는 현상 없음
+        }
+    }
+}

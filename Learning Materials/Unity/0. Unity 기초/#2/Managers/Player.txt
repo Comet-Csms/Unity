@@ -1,0 +1,28 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Managers mg = new Managers(); // 오류
+
+        /* // 직접 @Managers Object를 찾고, 그 안의 Managers Script를 찾아오는 코드
+        // Managers Script를 요청하기만 하는 코드로 개선 필요
+        GameObject go = GameObject.Find("@Managers");
+        Managers mg = go.GetComponent<Managers>();
+        */
+
+        // Managers Script를 요청하는 코드
+        Managers mg = Managers.GetInstance();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+}

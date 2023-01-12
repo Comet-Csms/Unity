@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestCollision : MonoBehaviour
+{
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Collision @{collision.gameObject.name}!");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Trigger @{other.gameObject.name}!");
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Local <-> World <-> (Viewport <-> Screen)(화면)
+        // 아래 코드들이 이 Script에 존재할 필요는 없으나, 간편하게 테스트해보기 위해 여기에 작성
+
+        //Debug.Log(Input.mousePosition); // Screen좌표 // 픽셀로 좌표 표시
+        //Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition)); // Viewport좌표 // 화면 비율(0~1)로 좌표 표시
+
+        /*if (Input.GetMouseButtonDown(0)) // 왼쪽 마우스 버튼을 눌렀을 때
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)); // 마우스가 위치한 점의 위치벡터(Near화면 위)
+            Vector3 dir = mousePos - Camera.main.transform.position; // 마우스 위치벡터 - 카메라 위치벡터 = 카메라 위치로부터 마우스가 위치한 곳(Near화면 위) 까지의 거리벡터(카메라 -> Near화면)
+            dir = dir.normalized; // 위의 거리벡터에서 단위벡터를 뽑아냄
+
+            Debug.DrawRay(Camera.main.transform.position, dir * 100.0f, Color.red, 1.0f); // 1초만 레이저 유지
+
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.transform.position, dir, out hit, 100.0f))
+            {
+                Debug.Log($"Raycast Camera @{hit.collider.gameObject.name}");
+            }
+        }*/
+
+        // 위 코드와 같은 기능
+        if (Input.GetMouseButtonDown(0)) // 왼쪽 마우스 버튼을 눌렀을 때
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f); // 1초만 레이저 유지
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100.0f))
+            {
+                Debug.Log($"Raycast Camera @{hit.collider.gameObject.name}");
+            }
+        }
+    }
+}

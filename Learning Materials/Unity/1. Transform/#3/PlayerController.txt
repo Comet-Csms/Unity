@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] // 변수를 public으로 선언하지 않으면서 Inspector에서 조절이 가능해짐
+    public float _speed = 10.0f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Local 좌표계 -> World 좌표계
+        // transform.TransformDirection
+        // transform.Translate
+
+        // World 좌표계 -> Local 좌표계
+        // transform.InverseTransformDirection
+
+        if (Input.GetKey(KeyCode.W)) // W키를 입력받으면
+        {
+            //transform.position += transform.TransformDirection(Vector3.forward * Time.deltaTime * _speed); // 캐릭터의 앞방향으로 움직임
+            transform.Translate(Vector3.forward * Time.deltaTime * _speed); // 위 코드와 같은 기능
+        }
+        if (Input.GetKey(KeyCode.S)) // S키를 입력받으면
+        {
+            //transform.position += transform.TransformDirection(Vector3.back * Time.deltaTime * _speed); // 캐릭터의 뒷방향으로 움직임
+            transform.Translate(Vector3.back * Time.deltaTime * _speed); // 위 코드와 같은 기능
+        }
+        if (Input.GetKey(KeyCode.D)) // D키를 입력받으면
+        {
+            //transform.position += transform.TransformDirection(Vector3.right * Time.deltaTime * _speed); // 캐릭터의 오른쪽방향으로 움직임
+            transform.Translate(Vector3.right * Time.deltaTime * _speed); // 위 코드와 같은 기능
+        }
+        if (Input.GetKey(KeyCode.A)) // A키를 입력받으면
+        {
+            //transform.position += transform.TransformDirection(Vector3.left * Time.deltaTime * _speed); // 캐릭터의 왼쪽방향으로 움직임
+            transform.Translate(Vector3.left * Time.deltaTime * _speed); // 위 코드와 같은 기능
+        }
+    }
+}

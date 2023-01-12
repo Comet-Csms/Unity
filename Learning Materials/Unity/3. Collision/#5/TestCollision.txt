@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestCollision : MonoBehaviour
+{
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Collision @{collision.gameObject.name}!");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Trigger @{other.gameObject.name}!");
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Debug.DrawRay(transform.position + Vector3.up, Vector3.forward * 10, Color.red); // 레이저가 잘나가는지 시각적으로 확인하기 위한 부분 // (시작지점, 해당 길이만큼, 레이저 색깔)
+        Vector3 look = transform.TransformDirection(Vector3.forward); // 캐릭터가 바라보는 앞방향을 나타냄
+        Debug.DrawRay(transform.position + Vector3.up, look * 10, Color.red);
+
+        // 레이저가 제일 처음 만난 하나의 물체만 충돌 판정
+        /*RaycastHit hit; // 레이저가 충돌한 물체의 이름을 뽑아오기 위해 추가
+        //if (Physics.Raycast(transform.position + Vector3.up, Vector.forward, out hit, 10)) // 실제 레이저 쏘는 부분 // (시작지점, 해당 방향으로 무한길이, 부딪힌 물체, 길이 제한(최대길이)) // 최대 길이를 넘어가는 위치라면 충돌이 일어나지 않음
+        if (Physics.Raycast(transform.position + Vector3.up, look, out hit, 10))
+        {
+            Debug.Log($"Raycast @{hit.collider.gameObject.name}!"); // 어떤 물체랑 충돌했는지 이름 출력
+        }*/
+
+        // 레이저가 지나가는 자리의 모든 물체에 충돌 판정
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(transform.position + Vector3.up, look, 10);
+
+        foreach (RaycastHit hit in hits)
+        {
+            Debug.Log($"Raycast @{hit.collider.gameObject.name}!"); // 어떤 물체랑 충돌했는지 이름 출력
+        }
+    }
+}

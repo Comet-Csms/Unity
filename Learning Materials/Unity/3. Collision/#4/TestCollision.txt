@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestCollision : MonoBehaviour
+{
+    private void OnCollisionEnter(Collision collision) // Collision Event 발생 시 실행
+    {
+        //Debug.Log("Collision!");
+        Debug.Log($"Collision @{collision.gameObject.name}!"); // 어떤 물체랑 충돌했는지 이름 출력
+    }
+
+    private void OnTriggerEnter(Collider other) // Trigger Event 발생 시 실행
+    {
+        //Debug.Log("Trigger!");
+        Debug.Log($"Trigger @{other.gameObject.name}!"); // 어떤 물체랑 충돌했는지 이름 출력
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+}

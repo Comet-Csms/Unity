@@ -1,0 +1,97 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField]
+    public float _speed = 10.0f;
+
+    bool _moveToDest = false; // 목적지로 갈지 여부
+    Vector3 _destPos; // 목적지를 저장하는 변수
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Managers.Input.KeyAction -= OnKeyboard; // 이전에 다른 곳에서 구독했다면 그 구독을 삭제 해주기 위한 코드
+        Managers.Input.KeyAction += OnKeyboard; // KeyAction에 구독하기 // InputManager에게 KeyAction이 있다면 OnKeyboard함수를 실행해달라는 의미
+        Managers.Input.MouseAction -= OnMouseClicked; // 이전에 다른 곳에서 구독했다면 그 구독을 삭제 해주기 위한 코드
+        Managers.Input.MouseAction += OnMouseClicked; // MouseAction에 구독하기
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (_moveToDest) // 목적지로 가야한다면 // 목적지 이동 모드가 ON이라면
+        {
+            Vector3 dir = _destPos - transform.position; // 목적지 위치벡터 - 플레이어 위치벡터 = 이동할 거리벡터
+            if (dir.magnitude < 0.0001f) // 목적지에 도착했다면 // 벡터 - 벡터는 정확히 0이 나오는 경우가 많지 않기 때문
+            {
+                _moveToDest = false; // 목적지 이동 모드 OFF
+            }
+            else // 아직 목적지에 도착하지 않았다면
+            {
+                // 도착지점에서 왔다갔다하는 문제 해결 방법 1.
+                /*float moveDist = _speed * Time.deltaTime;
+                if (moveDist >= dir.magnitude)
+                {
+                    moveDist = dir.magnitude;
+                }*/
+                // 도착지점에서 왔다갔다하는 문제 해결 방법 2. (추천)
+                float moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude); // (value, min, max) // value가 min보다 작으면 min, max보다 크면 max반환 // value가 min과 max 사이의 값을 보장 받음
+
+                //transform.position += dir.normalized * _speed * Time.deltaTime; // 플레이어가 도착지점 부근에서 왔다갔다하는 현상 발생 // 목적지보다 조금지나쳐가면 다시 돌아오려고 하기 때문
+                transform.position += dir.normalized * moveDist; // 플레이어 이동
+                //transform.LookAt(_destPos); // 플레이어가 목적지를 바라보기 // 부드럽게 움직이지 않음
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime); // 플레이어가 부드럽게 목적지 방향으로 회전
+            }
+        }
+    }
+
+    void OnKeyboard()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.2f);
+            transform.position += Vector3.forward * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.2f);
+            transform.position += Vector3.back * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.2f);
+            transform.position += Vector3.right * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.2f);
+            transform.position += Vector3.left * Time.deltaTime * _speed;
+        }
+
+        _moveToDest = false; // 키보드로 움직일 때는 목적지를 향해 움직이는 방식이 아니기 때문에 false // 목적지 이동 모드 OFF
+    }
+
+    void OnMouseClicked(Define.MouseEvent e)
+    {
+        if (e != Define.MouseEvent.Click) // 마우스 클릭이 아니라면
+        {
+            return; // 그냥 return
+        }
+
+        //Debug.Log("OnMouseClicked!"); // 이벤트가 잘 들어오나 로그 찍어보기
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f); // 1초만 레이저 유지
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall"))) // Layer가 Wall로 설정되어 있는 Object에만 Raycasting 연산
+        {
+            _destPos = hit.point; // 목적지 저장
+            _moveToDest = true; // 목적지가 저장되면 목적지를 향해 움직일 것이기 때문에 true // 목적지 이동 모드 ON
+        }
+    }
+}

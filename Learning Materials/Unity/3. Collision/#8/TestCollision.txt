@@ -1,0 +1,52 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestCollision : MonoBehaviour
+{
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Collision @{collision.gameObject.name}!");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Trigger @{other.gameObject.name}!");
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Local <-> World <-> (Viewport <-> Screen)(화면)
+        // 아래 코드들이 이 Script에 존재할 필요는 없으나, 간편하게 테스트해보기 위해 여기에 작성
+
+        //Debug.Log(Input.mousePosition); // Screen좌표 // 픽셀로 좌표 표시
+        //Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition)); // Viewport좌표 // 화면 비율(0~1)로 좌표 표시
+
+        if (Input.GetMouseButtonDown(0)) // 왼쪽 마우스 버튼을 눌렀을 때
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f); // 1초만 레이저 유지
+
+            // Layer 여러개 선택하는 방법
+            //int mask = (1 << 8) | (1 << 9); // 768과 같지만, 알아보기 쉽게 앞과 같이 코딩하기 // 8번 레이어 : Monster, 9번 레이어 : Wall
+            //LayerMask mask = LayerMask.GetMask("Monster") | LayerMask.GetMask("Wall"); // 위 코드와 같은 기능
+
+            LayerMask mask = LayerMask.GetMask("Monster"); // Monster 레이어만 선택
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100.0f, mask)) // Monster 레이어만 연산
+            {
+                //Debug.Log($"Raycast Camera @{hit.collider.gameObject.name}");
+                Debug.Log($"Raycast Camera @{hit.collider.gameObject.tag}"); // Object를 Tag이름으로 출력
+            }
+        }
+    }
+}

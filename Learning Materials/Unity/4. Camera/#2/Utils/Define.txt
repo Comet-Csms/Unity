@@ -1,0 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Define
+{
+    public enum CameraMode // 카메라 모드
+    {
+        QuarterView
+    }
+
+    public enum MouseEvent // 마우스 이벤트
+    {
+        Press, // 누르고 있는 상태
+        Click // 클릭
+    }
+}

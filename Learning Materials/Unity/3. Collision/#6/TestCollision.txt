@@ -1,0 +1,33 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestCollision : MonoBehaviour
+{
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Collision @{collision.gameObject.name}!");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Trigger @{other.gameObject.name}!");
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Local <-> World <-> (Viewport <-> Screen)(화면)
+        // 아래 코드들이 이 Script에 존재할 필요는 없으나, 간편하게 테스트해보기 위해 여기에 작성
+
+        //Debug.Log(Input.mousePosition); // Screen좌표 // 픽셀로 좌표 표시
+
+        Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition)); // Viewport좌표 // 화면 비율(0~1)로 좌표 표시
+    }
+}

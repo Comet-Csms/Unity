@@ -1,0 +1,23 @@
+using System; // Action 사용하기 위함
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InputManager // 일반적인 C# 스크립트
+{
+    public Action KeyAction = null;
+
+    // Update is called once per frame
+    public void OnUpdate()
+    {
+        if (Input.anyKey == false) // 아무 입력이 없다면
+        {
+            return; // 그냥 return
+        }
+
+        if (KeyAction != null) // KeyAction이 있었다면
+        {
+            KeyAction.Invoke(); // 구독한 곳에 KeyAction이 있었다고 전파
+        }
+    }
+}

@@ -1,0 +1,33 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.W)) // W키를 입력받으면
+        {
+            transform.position += new Vector3(0.0f, 0.0f, 1.0f); // z축 +방향으로 이동
+        }
+        if (Input.GetKey(KeyCode.S)) // S키를 입력받으면
+        {
+            transform.position -= new Vector3(0.0f, 0.0f, 1.0f); // z축 -방향으로 이동
+        }
+        if (Input.GetKey(KeyCode.D)) // D키를 입력받으면
+        {
+            transform.position += new Vector3(1.0f, 0.0f, 0.0f); // x축 +방향으로 이동
+        }
+        if (Input.GetKey(KeyCode.A)) // A키를 입력받으면
+        {
+            transform.position -= new Vector3(1.0f, 0.0f, 0.0f); // x축 -방향으로 이동
+        }
+    }
+}

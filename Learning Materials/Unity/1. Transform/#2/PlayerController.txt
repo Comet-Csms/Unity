@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    //public float _speed = 10.0f; // Inspector에서 조절이 가능해짐
+    [SerializeField] // 변수를 public으로 선언하지 않으면서 Inspector에서 조절이 가능해짐
+    float _speed = 10.0f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.W)) // W키를 입력받으면
+        {
+            //transform.position += new Vector3(0.0f, 0.0f, 1.0f) * Time.deltaTime * _speed; // 적당한 속도로 앞으로 움직이게 변경
+            transform.position += Vector3.forward * Time.deltaTime * _speed; // 예약된 코드로 변경
+        }
+        if (Input.GetKey(KeyCode.S)) // S키를 입력받으면
+        {
+            //transform.position -= new Vector3(0.0f, 0.0f, 1.0f) * Time.deltaTime * _speed; // 적당한 속도로 뒤로 움직이게 변경
+            transform.position += Vector3.back * Time.deltaTime * _speed; // 예약된 코드로 변경
+        }
+        if (Input.GetKey(KeyCode.D)) // D키를 입력받으면
+        {
+            //transform.position += new Vector3(1.0f, 0.0f, 0.0f) * Time.deltaTime * _speed; // 적당한 속도로 왼쪽으로 움직이게 변경
+            transform.position += Vector3.right * Time.deltaTime * _speed; // 예약된 코드로 변경
+        }
+        if (Input.GetKey(KeyCode.A)) // A키를 입력받으면
+        {
+            //transform.position -= new Vector3(1.0f, 0.0f, 0.0f) * Time.deltaTime * _speed; // 적당한 속도로 오른쪽으로 움직이게 변경
+            transform.position += Vector3.left * Time.deltaTime * _speed; // 예약된 코드로 변경
+        }
+    }
+}

@@ -1,0 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraController : MonoBehaviour
+{
+    [SerializeField]
+    Define.CameraMode _mode = Define.CameraMode.QuarterView; // 카메라 모드 설정
+
+    [SerializeField]
+    Vector3 _delta = new Vector3(0.0f, 8.0f, -6.0f); // 카메라가 플레이어로부터 떨어져있을 위치
+
+    [SerializeField]
+    GameObject _player = null; // UnityChan(Player Object)를 드래그 드롭으로 넣기
+
+    // Start is called before the first frame update
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void LateUpdate() // Player 이동 후 카메라 이동하게 함 // LateUpdate()가 Update()보다 늦게 실행됨
+    {
+        if (_mode == Define.CameraMode.QuarterView) // 카메라모드가 QuarterView일 때
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, LayerMask.GetMask("Wall"))) // (레이저 시작위치, 레이저의 방향, 레이저 충돌 물체, 레이저 최대 길이, 특정 Layer만 연산) // 카메라와 플레이어 사이에 Wall이 있다면
+            {
+                float dist = (hit.point - _player.transform.position).magnitude * 0.8f; // (벽의 위치벡터 - 플레이어의 위치벡터 = 플레이어와 벽 사이의 거리벡터)의 크기의 0.8배 // 카메라를 위치 시키고 싶은 거리 크기
+                transform.position = _player.transform.position + _delta.normalized * dist; // 플레이어 위치 + 카메라 방향의 단위벡터 * 카메라를 위치 시키고 싶은 거리 크기
+            }
+            else
+            {
+                transform.position = _player.transform.position + _delta; // 플레이어의 위치벡터에 카메라가 플레이어로부터 떨어져있을 위치벡터를 더해주기
+                transform.LookAt(_player.transform); // 내가 카메라의 Rotation을 직접 설정하는 것이 아니라(45도로 설정했었음), 함수가 해당 Object를 지켜보도록 Rotation을 설정해줌
+            }
+        }
+    }
+
+    public void SetQuarterView(Vector3 delta) // 나중에 QuarterView를 코드로 세팅할 수도 있기 때문에 그냥 작성
+    {
+        _mode = Define.CameraMode.QuarterView;
+        _delta = delta;
+    }
+}
