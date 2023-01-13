@@ -1,0 +1,103 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField]
+    public float _speed = 10.0f;
+
+    bool _moveToDest = false;
+    Vector3 _destPos;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Managers.Input.KeyAction -= OnKeyboard;
+        Managers.Input.KeyAction += OnKeyboard;
+        Managers.Input.MouseAction -= OnMouseClicked;
+        Managers.Input.MouseAction += OnMouseClicked;
+    }
+
+    float wait_run_ratio = 0; // 0과 1사이 값 // WAIT모션과 RUN모션의 비율을 나타내기 위한 값
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (_moveToDest)
+        {
+            Vector3 dir = _destPos - transform.position;
+            if (dir.magnitude < 0.0001f)
+            {
+                _moveToDest = false;
+            }
+            else
+            {
+                float moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
+
+                transform.position += dir.normalized * moveDist;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
+            }
+        }
+
+        if (_moveToDest) // 움직이고 있다면 // 키보드 움직임은 제외 // 마우스 움직일 때만
+        {
+            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime); // (변화 시키고 싶은 값, 최종 변화값, 증가정도) // 1로 서서히 증가
+            Animator anim = GetComponent<Animator>(); // Animator Component 불러오기
+            anim.SetFloat("wait_run_ratio", wait_run_ratio); // 최종적으로 wait_run_ratio parameter은 서서히 1이 됨 // wait_run_ratio대신 1이였다면 RUN 100%이기 때문에 blending 안하고 RUN 애니메이션 호출하는 것과 같음
+            anim.Play("WAIT_RUN"); // Blending된 WAIT_RUN 애니메이션 호출
+        }
+        else // 움직이지 않는다면
+        {
+            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime); // (변화 시키고 싶은 값, 최종 변화값, 감소정도) // 0으로 서서히 감소
+            Animator anim = GetComponent<Animator>(); // Animator Component 불러오기
+            anim.SetFloat("wait_run_ratio", wait_run_ratio); // 최종적으로 wait_run_ratio parameter은 서서히 0이 됨 // wait_run_ratio대신 0이였다면 WAIT 100%이기 때문에 blending 안하고 WAIT 애니메이션 호출하는 것과 같음
+            anim.Play("WAIT_RUN"); // Blending된 WAIT_RUN 애니메이션 호출
+        }
+    }
+
+    void OnKeyboard()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.2f);
+            transform.position += Vector3.forward * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.2f);
+            transform.position += Vector3.back * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.2f);
+            transform.position += Vector3.right * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.2f);
+            transform.position += Vector3.left * Time.deltaTime * _speed;
+        }
+
+        _moveToDest = false;
+    }
+
+    void OnMouseClicked(Define.MouseEvent e)
+    {
+        /*if (e != Define.MouseEvent.Click)
+        {
+            return;
+        }*/ // 클릭할 때만 이동하는 것이 아니라 마우스 누른 상태에서도 이동할 수 있게 코드 삭제
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))
+        {
+            _destPos = hit.point;
+            _moveToDest = true;
+        }
+    }
+}
