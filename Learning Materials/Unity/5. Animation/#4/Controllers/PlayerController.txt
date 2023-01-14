@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         // 애니메이션
         wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime); // (변화 시키고 싶은 값, 최종 변화값, 증가정도) // 1로 서서히 증가
         Animator anim = GetComponent<Animator>(); // Animator Component 불러오기
-        anim.SetFloat("wait_run_ratio", wait_run_ratio); // 최종적으로 wait_run_ratio parameter은 서서히 1이 됨 // wait_run_ratio대신 1이였다면 RUN 100%이기 때문에 blending 안하고 RUN 애니메이션 호출하는 것과 같음
+        anim.SetFloat("wait_run_ratio", wait_run_ratio); // 최종적으로 wait_run_ratio parameter는 서서히 1이 됨 // wait_run_ratio대신 1이였다면 RUN 100%이기 때문에 blending 안하고 RUN 애니메이션 호출하는 것과 같음
         anim.Play("WAIT_RUN"); // Blending된 WAIT_RUN 애니메이션 호출
     }
 
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         // 애니메이션
         wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime); // (변화 시키고 싶은 값, 최종 변화값, 감소정도) // 0으로 서서히 감소
         Animator anim = GetComponent<Animator>(); // Animator Component 불러오기
-        anim.SetFloat("wait_run_ratio", wait_run_ratio); // 최종적으로 wait_run_ratio parameter은 서서히 0이 됨 // wait_run_ratio대신 0이였다면 WAIT 100%이기 때문에 blending 안하고 WAIT 애니메이션 호출하는 것과 같음
+        anim.SetFloat("wait_run_ratio", wait_run_ratio); // 최종적으로 wait_run_ratio parameter는 서서히 0이 됨 // wait_run_ratio대신 0이였다면 WAIT 100%이기 때문에 blending 안하고 WAIT 애니메이션 호출하는 것과 같음
         anim.Play("WAIT_RUN"); // Blending된 WAIT_RUN 애니메이션 호출
     }
 

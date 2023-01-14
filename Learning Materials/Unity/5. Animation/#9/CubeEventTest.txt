@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CubeEventTest : MonoBehaviour
+{
+    void TestEventCallback()
+    {
+        Debug.Log("Event Received!");
+    }
+
+    void OnRunEvent() // Animation Event에서 정한 이름으로 함수 이름 작성
+    {
+        Debug.Log("뚜벅 뚜벅!");
+    }
+}

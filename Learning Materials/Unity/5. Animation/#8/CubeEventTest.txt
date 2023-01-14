@@ -1,0 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CubeEventTest : MonoBehaviour
+{
+    void TestEventCallback() // 아무 이름의 함수 하나 생성
+    {
+        Debug.Log("Event Received!");
+    }
+}
