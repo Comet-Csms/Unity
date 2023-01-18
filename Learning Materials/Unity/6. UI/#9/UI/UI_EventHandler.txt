@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems; // IBeginDragHandler, IDragHandler 사용하기 위함
+
+public class UI_EventHandler : MonoBehaviour, IBeginDragHandler, IDragHandler // IBeginDragHandler, IDragHandler - interface
+{
+    public void OnBeginDrag(PointerEventData eventData) // 드래그를 시작하기 직전 상황에 이벤트 발생(클릭만으로는 이 이벤트가 발생하지 않음)
+    {
+        Debug.Log("OnBeginDrag");
+        //throw new System.NotImplementedException(); // interface 추가할 때 자동 생성됨
+    }
+
+    public void OnDrag(PointerEventData eventData) // 드래그를 하면 이벤트 발생
+    {
+        Debug.Log("OnDrag");
+
+        transform.position = eventData.position; // 이 스크립트를 component로 가진 Object를 드래그하는대로 이동시킴
+        //throw new System.NotImplementedException(); // interface 추가할 때 자동 생성됨
+    }
+}

@@ -1,0 +1,15 @@
+using System; // Action 사용하기 위함
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems; // PointerEventData 사용하기 위함
+
+public static class Extension // Extension Method 만들기 // Extension class를 만들때는 static이 필요, MonoBehaviour은 필요없음
+{
+    public static void AddUIEvent(this GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click) // UI Event를 추가해주는 함수 정의 // (GameObject, 구독시킬 함수(CallBack), 구독을 받을 이벤트(기본은 클릭으로 설정))
+    {
+        //go.AddUIEvent(~~~); // 다른 곳에서 이렇게 사용 가능해짐
+
+        UI_Base.AddUIEvent(go, action, type);
+    }
+}

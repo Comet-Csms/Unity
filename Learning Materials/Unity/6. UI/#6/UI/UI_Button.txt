@@ -1,0 +1,115 @@
+using System; // Type 사용하기 위함
+using System.Collections;
+using System.Collections.Generic;
+using TMPro; // TMP_Text 사용하기 위함
+using UnityEngine;
+using UnityEngine.UI; // Text 사용하기 위함
+
+public class UI_Button : MonoBehaviour
+{
+    /*[SerializeField]
+    TMP_Text _text; // == TextMeshProUGUI _text;*/ // Unity에서 매핑하지 않고, 코드에서 이름으로 찾아 저장할거라 필요 없음
+
+    Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>(); // Button Type은 Button의 목록들을 들고 있고, Text Type은 Text의 목록들을 들고 있음
+
+    enum Buttons // Button Object 목록 작성
+    {
+        PointButton
+    }
+
+    enum Texts // Text Object 목록 작성
+    {
+        PointText,
+        ScoreText
+    }
+
+    enum GameObjects // UI와 관련없는 Object 목록 작성
+    {
+        TestObject,
+        //ScoreText
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Bind<Button>(typeof(Buttons)); // Button Component(<Button>)를 찾아 해당하는 Object를 매핑해라
+        //Bind<Text>(typeof(Texts)); // Text Component(<Text>)를 찾아 해당하는 Object를 매핑해라
+        Bind<TMP_Text>(typeof(Texts)); // Text Component(<TMP_Text>)를 찾아 해당하는 Object를 매핑해라
+        //Debug.Log($"{typeof(Buttons)}"); // UI_Button+Buttons
+        //Debug.Log($"{typeof(Texts)}"); // UI_Button+Texts
+        Bind<GameObject>(typeof(GameObjects)); // GameObject Component(<GameObject>)를 찾아 해당하는 Object를 매핑하라는 의미지만, GameObject는 component가 아니라 오류 발생 // FindChild 함수 수정 필요
+
+        //Get<Text>((int)Texts.ScoreText).text = "Bind Test"; // 함수 테스트용
+        //Get<TMP_Text>((int)Texts.ScoreText).text = "Bind Test"; // 함수 테스트용
+        GetText((int)Texts.ScoreText).text = "Bind Test"; // 함수 테스트용
+
+        // #참고 // 이해가 안된다면 이 부분은 넘어가기
+        //Get<GameObject>((int)GameObjects.ScoreText).transform.GetComponent<TMP_Text>().text = "Bind Test2"; // 따지고 보면 ScoreText도 GameObject, GameObject로 ScoreText를 찾고, 거기서 TMP_Text Component를 찾아서, 텍스트 변경 가능
+    }
+
+    void Bind<T>(Type type) where T : UnityEngine.Object // enum을 통째로 넘겨받으면 목록들이랑 실제 Object랑 매핑해주는 함수 // <T>, Button Component, Text Component를 들고있는 Object를 찾기위해 힌트를 주기 위함
+    {
+        string[] names = Enum.GetNames(type); // type으로 넘겨받은 enum에 속한 enum값들을 string으로 변환해서 배열로 저장
+        UnityEngine.Object[] objects = new UnityEngine.Object[names.Length]; // enum값의 개수만큼 UnityEngine.Object의 배열을 만들어줌 // UnityEngine.Object에는 모든 Object들(Text, Button 등)을 저장 가능
+        _objects.Add(typeof(T), objects); // Key값에는 Type(Text, Button 등)를 넣어주고, Value값에는 objects를 넣어주기 // 여기까지하면 objects는 빈 배열 // object들을 찾아서 넣어줘야함
+
+        // names에 들어있는 object의 이름들로 실제 object를 찾아 연결해주는 과정
+        for (int i = 0; i < names.Length; i++) // names에 들어있는 object들의 이름들의 수만큼 반복
+        {
+            if (typeof(T) == typeof(GameObject)) // T타입이 GameObject라면
+            {
+                objects[i] = Util.FindChild(gameObject, names[i], true); // GameObject 전용 버전의 FindChild 함수 호출
+            }
+            else // T타입이 Component라면
+            {
+                objects[i] = Util.FindChild<T>(gameObject, names[i], true); // gameObject는 UI_Button Script를 포함하고있는 UI_Button Object를 의미 // Texts - pointText의 경우에는 gameObject의 자식의 자식이기 때문에 재귀는 true여야함
+            }
+
+            if (objects[i] == null) // 해당 Object를 못찾았으면
+            {
+                Debug.Log($"Failed to bind({names[i]}!"); // names[i]라는 이름을 가진, T타입의 component를 들고있는, Object를 못찾았다는 의미
+            }
+        }
+    }
+
+    T Get<T>(int idx) where T : UnityEngine.Object // 인덱스에 해당하는 T타입의 component를 가진 Object반환
+    {
+        UnityEngine.Object[] objects = null; // 추출한 Value들을 저장하기 위한 Object배열
+        if (_objects.TryGetValue(typeof(T), out objects) == false) // TryGetValue로 Key값을 이용해 Value 추출하는 것을 실패했다면
+        {
+            return null; // null을 return
+        }
+
+        return objects[idx] as T; // Object배열에서 인덱스에 해당하는 Value만 추출 // T타입으로 캐스팅해서(원래는 Object타입으로 저장되어있었기 때문) return
+    }
+
+    /*Text GetText(int idx)
+    {
+        return Get<Text>(idx);
+    }*/
+
+    TMP_Text GetText(int idx) // 자주 사용하기 때문에 간편화 시킴
+    {
+        return Get<TMP_Text>(idx);
+    }
+
+    Button GetButton(int idx) // 자주 사용하기 때문에 간편화 시킴
+    {
+        return Get<Button>(idx);
+    }
+
+    Image GetImage(int idx) // 자주 사용하기 때문에 간편화 시킴
+    {
+        return Get<Image>(idx);
+    }
+
+    int _score = 0;
+
+    public void OnButtonClicked() // public으로 작성해야 Unity에서 함수가 뜸
+    {
+        Debug.Log("ButtonClicked!");
+
+        _score++; // 한번 클릭이 발생할 때마다 1씩 증가
+        //_text.text = $"점수 : {_score}점";
+    }
+}

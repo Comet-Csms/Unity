@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro; // TMP_Text 사용하기 위함
+using UnityEngine;
+using UnityEngine.UI; // Text 사용하기 위함
+
+public class UI_Button : MonoBehaviour
+{
+    [SerializeField] // Unity에서 이어주기 위함
+    //Text _text; // TextMeshPro에서는 사용 불가 // UI - Legacy - Text에서 사용 가능
+    TMP_Text _text; // == TextMeshProUGUI _text;
+    int _score = 0; // 점수
+
+    public void OnButtonClicked() // public으로 작성해야 Unity에서 함수가 뜸
+    {
+        Debug.Log("ButtonClicked!");
+
+        _score++; // 한번 클릭이 발생할 때마다 1씩 증가
+        _text.text = $"점수 : {_score}점";
+    }
+}
