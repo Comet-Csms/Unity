@@ -29,7 +29,7 @@ public class UI_Inven : UI_Scene
             Managers.Resource.Destroy(child.gameObject);
         }
 
-        // 실제 인벤토리 정보를 참고해서 만들어야하나 임시로 강제 생성
+        // 실제 인벤토리 정보를 참고해서 만들어야하지만 임시로 강제 생성
         for (int i = 0; i < 8; i++)
         {
             GameObject item = Managers.Resource.Instantiate("UI/Scene/UI_Inven_Item"); // 프리팹에서 아이템을 불러오기

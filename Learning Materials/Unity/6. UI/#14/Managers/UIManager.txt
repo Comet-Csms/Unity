@@ -39,7 +39,7 @@ public class UIManager
         }
     }
 
-    public T ShowSceneUI<T>(string name = null) where T : UI_Scene // 일반 UI 띄우기 // name은 Prefab의 이름, T는 Script(component)의 이름 // T는 UI_Popup을 상속받는 Script들
+    public T ShowSceneUI<T>(string name = null) where T : UI_Scene // 일반 UI 띄우기 // name은 Prefab의 이름, T는 Script(component)의 이름 // T는 UI_Scene을 상속받는 Script들
     {
         if (string.IsNullOrEmpty(name)) // name을 안받았다면
         {
