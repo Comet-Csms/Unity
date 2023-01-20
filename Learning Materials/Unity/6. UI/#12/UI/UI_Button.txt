@@ -55,7 +55,7 @@ public class UI_Button : UI_Base // 간접적으로 MonoBehaviour을 상속받�
         AddUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
 
         // #참고 // 이해가 안된다면 이 부분은 넘어가기
-        //Get<GameObject>((int)GameObjects.ScoreText).transform.GetComponent<TMP_Text>().text = "Bind Test2"; // 따지고 보면 ScoreText도 GameObject, GameObject로 ScoreText를 찾고, 거기서 TMP_Text Component를 찾아서, 텍스트 변경 가능
+        //Get<GameObject>((int)GameObjects.ScoreText).GetComponent<TMP_Text>().text = "Bind Test2"; // 따지고 보면 ScoreText도 GameObject, GameObject로 ScoreText를 찾고, 거기서 TMP_Text Component를 찾아서, 텍스트 변경 가능
     }
 
     int _score = 0;

@@ -1,0 +1,107 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField]
+    float _speed = 10.0f;
+
+    Vector3 _destPos;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Managers.Input.MouseAction -= OnMouseClicked;
+        Managers.Input.MouseAction += OnMouseClicked;
+
+        /*Managers.UI.ShowPopupUI<UI_Button>("UI_Button"); // ShowPopupUI로 UI_Button Popup 띄우기 // "UI_Button"은 생략 가능
+        Managers.UI.ClosePopupUI(); // 마지막으로 띄운 팝업을 닫음 // ClosePopupUI()로 팝업을 닫는 것이 아니라 다른데서 팝업을 닫아버리면, 다음에 엉뚱한 Popup이 닫힐 수 있음*/
+        
+        /*// 좀 더 안정적인 ClosePopupUI(popup) 버전 사용하기
+        UI_Button ui = Managers.UI.ShowPopupUI<UI_Button>(); // UI_Button 팝업 띄우기
+        Managers.UI.ClosePopupUI(ui); // UI_Button 팝업 닫기*/ // Sort Order 테스트를 위해 삭제
+
+        for (int i = 0; i < 8; i++) // 테스트로 팝업 8개 만들기
+        {
+            Managers.UI.ShowPopupUI<UI_Button>();
+        }
+    }
+
+    public enum PlayerState
+    {
+        Die,
+        Moving,
+        Idle
+    }
+
+    PlayerState _state = PlayerState.Idle;
+
+    void UpdateDie()
+    {
+
+    }
+
+    void UpdateMoving()
+    {
+        Vector3 dir = _destPos - transform.position;
+        if (dir.magnitude < 0.0001f)
+        {
+            _state = PlayerState.Idle;
+        }
+        else
+        {
+            float moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
+
+            transform.position += dir.normalized * moveDist;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
+        }
+
+        // 애니메이션
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", _speed);
+    }
+
+    void UpdateIdle()
+    {
+        // 애니메이션
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", 0);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        switch (_state)
+        {
+            case PlayerState.Die:
+                UpdateDie();
+                break;
+            case PlayerState.Moving:
+                UpdateMoving();
+                break;
+            case PlayerState.Idle:
+                UpdateIdle();
+                break;
+        }
+    }
+
+    void OnMouseClicked(Define.MouseEvent e)
+    {
+        if (_state == PlayerState.Die)
+        {
+            return;
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))
+        {
+            _destPos = hit.point;
+            _state = PlayerState.Moving;
+        }
+    }
+}

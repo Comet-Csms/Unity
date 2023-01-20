@@ -8,7 +8,7 @@ using UnityEngine.UI; // Text 사용하기 위함
 
 public class UI_Base : MonoBehaviour // UI Canvas에 붙는 Script Component들의 부모
 {
-    Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>(); // Button Type은 Button의 목록들을 들고 있고, Text Type은 Text의 목록들을 들고 있음
+    protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>(); // Button Type은 Button의 목록들을 들고 있고, Text Type은 Text의 목록들을 들고 있음
 
     protected void Bind<T>(Type type) where T : UnityEngine.Object // enum을 통째로 넘겨받으면 목록들이랑 실제 Object랑 매핑해주는 함수 // <T>, Button Component, Text Component를 들고있는 Object를 찾기위해 힌트를 주기 위함
     {
@@ -30,7 +30,7 @@ public class UI_Base : MonoBehaviour // UI Canvas에 붙는 Script Component들�
 
             if (objects[i] == null) // 해당 Object를 못찾았으면
             {
-                Debug.Log($"Failed to bind({names[i]}!"); // names[i]라는 이름을 가진, T타입의 component를 들고있는, Object를 못찾았다는 의미
+                Debug.Log($"Failed to bind({names[i]})!"); // names[i]라는 이름을 가진, T타입의 component를 들고있는, Object를 못찾았다는 의미
             }
         }
     }

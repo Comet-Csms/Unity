@@ -44,7 +44,7 @@ public class UI_Button : MonoBehaviour
         GetText((int)Texts.ScoreText).text = "Bind Test"; // 함수 테스트용
 
         // #참고 // 이해가 안된다면 이 부분은 넘어가기
-        //Get<GameObject>((int)GameObjects.ScoreText).transform.GetComponent<TMP_Text>().text = "Bind Test2"; // 따지고 보면 ScoreText도 GameObject, GameObject로 ScoreText를 찾고, 거기서 TMP_Text Component를 찾아서, 텍스트 변경 가능
+        //Get<GameObject>((int)GameObjects.ScoreText).GetComponent<TMP_Text>().text = "Bind Test2"; // 따지고 보면 ScoreText도 GameObject, GameObject로 ScoreText를 찾고, 거기서 TMP_Text Component를 찾아서, 텍스트 변경 가능
     }
 
     void Bind<T>(Type type) where T : UnityEngine.Object // enum을 통째로 넘겨받으면 목록들이랑 실제 Object랑 매핑해주는 함수 // <T>, Button Component, Text Component를 들고있는 Object를 찾기위해 힌트를 주기 위함

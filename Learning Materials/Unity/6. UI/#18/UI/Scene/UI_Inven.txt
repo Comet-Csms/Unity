@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UI_Inven : UI_Scene
+{
+    enum GameObjects
+    {
+        GridPanel // UI_Inven Object의 자식
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Init();
+    }
+
+    public override void Init()
+    {
+        base.Init();
+
+        Bind<GameObject>(typeof(GameObjects));
+
+        GameObject gridPanel = Get<GameObject>((int)GameObjects.GridPanel);
+
+        // 반복문을 돌면서 GridPanel이 가진 자식을 다 삭제하는 코드
+        foreach (Transform child in gridPanel.transform)
+        {
+            Managers.Resource.Destroy(child.gameObject);
+        }
+
+        // 실제 인벤토리 정보를 참고해서 만들어야하나 임시로 강제 생성
+        for (int i = 0; i < 8; i++)
+        {
+            GameObject item = Managers.Resource.Instantiate("UI/Scene/UI_Inven_Item"); // 프리팹에서 아이템을 불러오기
+            item.transform.SetParent(gridPanel.transform); // 불러온 아이템의 부모를 girdPanel로 설정
+
+            UI_Inven_Item invenitem = Util.GetOrAddComponent<UI_Inven_Item>(item); // item에 UI_Inven_Item Script Component 붙여주기
+            invenitem.SetInfo($"집행검{i}번"); // item의 이름 세팅
+        }
+    }
+}
