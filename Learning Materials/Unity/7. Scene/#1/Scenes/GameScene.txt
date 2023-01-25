@@ -1,0 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameScene : BaseScene
+{
+    // Start is called before the first frame update
+    /*void Start() // void Awake()로 바꾸면 Script Component가 disabled 되어있어도 작동함
+    {
+        Init();
+    }*/ // BaseScene Script에서 해결
+
+    protected override void Init()
+    {
+        base.Init();
+
+        SceneType = Define.Scene.Game; // Scene 타입을 Game으로 설정
+
+        // 만든 인벤토리 띄우기 // PlayerController Script에서 가져옴
+        Managers.UI.ShowSceneUI<UI_Inven>();
+    }
+
+    public override void Clear()
+    {
+        //throw new System.NotImplementedException();
+    }
+}

@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SoundManager
+{
+    AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount]; // 2개 생성 // Bgm용, Effect용 // 아직은 비어있음, Init()에서 연결
+
+    public void Init()
+    {
+        GameObject root = GameObject.Find("@Sound"); // @Sound Object 찾기
+        if (root == null) // 못찾았다면
+        {
+            root = new GameObject { name = "@Sound" }; // @Sound Object 생성
+            Object.DontDestroyOnLoad(root); // Scene을 이동할 때 사라지지 않음
+
+            string[] soundNames = System.Enum.GetNames(typeof(Define.Sound)); // Define.Sound에서 Sound 타입들을 추출
+            for (int i = 0; i < soundNames.Length - 1; i++) // MaxCount 빼주기 위해 -1을 해줌
+            {
+                GameObject go = new GameObject { name = soundNames[i] }; // 정의해둔 Sound 타입들로 Object 생성
+                _audioSources[i] = go.AddComponent<AudioSource>(); // 생성한 Object에 AudioSource Component를 붙이고 _audioSources[i]에 연결
+                go.transform.parent = root.transform; // 부모를 root로 설정 // SetParent는 Rect Transform일 때 이용
+            }
+
+            _audioSources[(int)Define.Sound.Bgm].loop = true; // Bgm의 경우에는 loop를 하도록 설정
+        }
+    }
+
+    public void Play(Define.Sound type, string path, float pitch = 1.0f)
+    {
+        if (path.Contains("Sound/") == false) // 입력한 경로에 Sound/ 가 없다면
+        {
+            path = $"Sound/{path}"; // Sound/ 넣어주기
+        }
+
+        if (type == Define.Sound.Bgm) // Sound 타입이 Bgm이면
+        {
+            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path); // 음원을 path에서 불러오기
+            if (audioClip == null) // audioClip이 없다면
+            {
+                Debug.Log($"AudioClip Missing! {path}");
+                return; // 그냥 return
+            }
+
+            // TODO
+        }
+        else // Bgm 이외의 Sound 타입이면
+        {
+            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path); // 음원을 path에서 불러오기
+            if (audioClip == null) // audioClip이 없다면
+            {
+                Debug.Log($"AudioClip Missing! {path}");
+                return; // 그냥 return
+            }
+
+            AudioSource audioSource = _audioSources[(int)Define.Sound.Effect]; // 간편하게 사용할 수 있도록 audioSource 변수에 연결 // _audioSources[(int)Define.Sound.Effect].~~~ 처럼 사용할 수 있음
+            audioSource.pitch = pitch; // 피치 설정
+            audioSource.PlayOneShot(audioClip); // audioClip 한번 실행
+        }
+    }
+}

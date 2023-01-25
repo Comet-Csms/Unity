@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement; // SceneManager 사용하기 위함
+
+public class LoginScene : BaseScene
+{
+    protected override void Init()
+    {
+        base.Init();
+
+        SceneType = Define.Scene.Login; // Scene 타입을 Login으로 변경
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q)) // Q키를 누르면
+        {
+            //SceneManager.LoadScene("Game"); // Game Scene으로 넘어감 // SceneManager은 기본 지원 Manager
+            Managers.Scene.LoadScene(Define.Scene.Game); // 위 코드 대신 SceneManagerEx 사용
+        }
+    }
+
+    public override void Clear()
+    {
+        Debug.Log("LoginScene Clear!");
+        //throw new System.NotImplementedException();
+    }
+}
