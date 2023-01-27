@@ -1,0 +1,58 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameScene : BaseScene
+{
+    Coroutine co;
+
+    protected override void Init()
+    {
+        base.Init();
+
+        SceneType = Define.Scene.Game;
+
+        Managers.UI.ShowSceneUI<UI_Inven>();
+
+        co = StartCoroutine("ExplodeAfterSeconds", 4.0f); // 인자를 던지며 ExplodeAfterSeconds 메소드 실행
+        //StopCoroutine(co); // co 코루틴 이벤트를 바로 취소
+        StartCoroutine("CoStopExplode", 2.0f); // 이렇게 2초 뒤에 이벤트를 취소하게 만들수도 있음
+    }
+
+    // 4초 후에 터지는 스킬을 코루틴으로 구현
+    IEnumerator ExplodeAfterSeconds(float seconds)
+    {
+        Debug.Log("Explode Enter!");
+        yield return new WaitForSeconds(seconds); // seconds 후에 ExplodeAfterSeconds 메소드가 다시 실행됨
+        Debug.Log("Explode Execute!!!");
+        co = null;
+    }
+
+    IEnumerator CoStopExplode(float seconds)
+    {
+        Debug.Log("Stop Enter!");
+        yield return new WaitForSeconds(seconds); // seconds 후에 ExplodeAfterSeconds 메소드가 다시 실행됨
+        Debug.Log("Stop Execute!!!");
+        if (co != null)
+        {
+            StopCoroutine(co);
+            co = null;
+        }
+    }
+
+    // 만약 4초 후에 터지는 스킬을 코루틴 없이 구현한다면
+    float deltaTime = 0;
+    void ExplodeAfter4Seconds() // 4초를 세기 위해 매 틱마다 더해주는 과정을 반복하는 낭비가 발생함
+    {
+        deltaTime += Time.deltaTime;
+        if (deltaTime >= 4)
+        {
+            // 로직
+        }
+    }
+
+    public override void Clear()
+    {
+        //throw new System.NotImplementedException();
+    }
+}
