@@ -1,0 +1,36 @@
+using System; // [Serializable] 사용하기 위함
+using System.Collections;
+using System.Collections.Generic;
+//using System.Linq; // ToDictionary 사용하기 위함
+using UnityEngine;
+
+#region Stat
+[Serializable]
+public class Stat // stats 리스트의 각 아이템들
+{
+    // public으로 만들고 싶지 않다면 SerializeField 이용
+    public int level;
+    public int hp;
+    public int attack;
+    // 변수 이름을 JSON파일과 똑같이 맞춰줘야함
+}
+
+[Serializable]
+public class StatData : ILoader<int, Stat> // stats 리스트 // stats 리스트를 받아와서 List로 저장하고, Dictionary로 변환하는 작업도 하나의 클래스에서 다 해줌
+{
+    public List<Stat> stats = new List<Stat>();
+
+    public Dictionary<int, Stat> MakeDict()
+    {
+        Dictionary<int, Stat> dict = new Dictionary<int, Stat>();
+        //stats.ToDictionary(); // IOS에서 버그가 많아 아래 방법 이용
+        foreach (Stat stat in stats) // stats 리스트를 돌며
+        {
+            dict.Add(stat.level, stat); // dict에 각 Stat정보 추가
+        }
+
+        return dict; // dict를 return
+        //throw new NotImplementedException();
+    }
+}
+#endregion

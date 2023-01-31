@@ -1,0 +1,30 @@
+using System; // [Serializable] 사용하기 위함
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[Serializable] // 외부 파일에서 이 클래스를 접근할 수 있게 해준다고 생각하기 // Serializable 선언 시 class에 public이 없어도 작동함
+public class Stat // stats 리스트의 각 아이템들
+{
+    // public으로 만들고 싶지 않다면 SerializeField 이용
+    public int level;
+    public int hp;
+    public int attack;
+    // 변수 이름을 JSON파일과 똑같이 맞춰줘야함
+}
+
+[Serializable] // 외부 파일에서 이 클래스를 접근할 수 있게 해준다고 생각하기 // Serializable 선언 시 class에 public이 없어도 작동함
+public class StatData // stats 리스트
+{
+    public List<Stat> stats = new List<Stat>();
+}
+
+public class DataManager
+{
+    public void Init()
+    {
+        TextAsset textAsset = Managers.Resource.Load<TextAsset>("Data/StatData"); // StatData.json 불러오기
+        //Debug.Log(textAsset.text); // StatData.json 내용 전체를 Log로 출력
+        StatData data = JsonUtility.FromJson<StatData>(textAsset.text); // JSON에서 데이터를 파싱해서, StatData class와 Stat class에 알맞게 넣어줌
+    }
+}
